@@ -1,7 +1,7 @@
 import { expect, stub } from 'lovecraft';
 import fs from 'fs';
 import path from 'path';
-import { exec } from 'child_process';
+import child_process from 'child_process';
 
 import Renderer from './renderer.js';
 
@@ -10,9 +10,9 @@ describe('Renderer', () => {
   let mockFs;
 
   beforeEach(() => {
-    mockExec = stub(exec);
+    mockExec = stub(child_process, 'exec');
     mockFs = {
-      existsSync: stub(fs, 'existsSync').returns(false),
+      existsSync: stub(fs, 'existsSync').returns(true),
       mkdirSync: stub(fs, 'mkdirSync'),
       writeFileSync: stub(fs, 'writeFileSync')
     };
@@ -76,8 +76,9 @@ describe('Renderer', () => {
 
   it('should create home directory if it does not exist', () => {
     const mockHome = path.join(process.cwd(), 'data', 'scenes');
-    
-    const renderer = new Renderer();
+    mockFs.existsSync.returns(false);
+
+    const renderer = new Renderer({ home: mockHome });
 
     expect(mockFs.mkdirSync.calledWith(mockHome, { recursive: true })).to.be.true;
   });
