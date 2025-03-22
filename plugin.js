@@ -4,21 +4,7 @@ import execution from 'phantomaton-execution';
 
 import commands from './commands.js';
 import Starter from './starter.js';
-
-class User {
-  constructor(options) {
-    this.request = options.request || "Generate a POV-Ray scene that explores computational mysticism";
-    this.iterations = 0;
-  }
-
-  async converse(turns) {
-    this.iterations++;
-    if (this.iterations > 5) {
-      return "Stop and provide a final assessment of the scene generation process.";
-    }
-    return this.request;
-  }
-}
+import User from './user.js';
 
 export default plugins.create(configuration => [
   // Register the User

@@ -12,9 +12,13 @@ export default class Starter {
       }
       const { message, reply } = await conversation.advance();
       await new Promise(res => setTimeout(res, this.delay * 1000));
+      conversation.user.preamble = conversation.assistant.preamble;
+      console.log('\n\n====== MESSAGE ======\n\n');
       console.log(message);
+      console.log('\n\n====== REPLY ======\n\n');
       console.log(reply);
-      console.log(conversation.preamble);
+      console.log('\n\n====== PREAMBLE ======\n\n');
+      console.log(conversation.assistant.preamble);
       this.rounds += 1;
     }
   }
