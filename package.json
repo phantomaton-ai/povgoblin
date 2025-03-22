@@ -20,5 +20,9 @@
   "type": "module",
   "devDependencies": {
     "lovecraft": "^1.0.3"
+  },
+  "dependencies": {
+    "phantomaton": "^0.0.9",
+    "phantomaton-anthropic": "^1.0.9"
   }
 }
