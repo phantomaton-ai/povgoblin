@@ -1,10 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import child_process from 'child_process';
 import { v4 as uuidv4 } from 'uuid';
-
-const execAsync = promisify(exec);
 
 class Renderer {
   constructor(options = {}) {
@@ -31,7 +28,7 @@ class Renderer {
     return new Promise((resolve, reject) => {
       const command = `povray ${povFile} +O${imageFile}`;
 
-      exec(command, (error, stdout, stderr) => {
+      child_process.exec(command, (error, stdout, stderr) => {
         if (error) {
           const messageIndex = stderr.indexOf('Parser Options');
           const message = stderr.slice(messageIndex);
