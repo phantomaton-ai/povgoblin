@@ -5,33 +5,26 @@ import Renderer from './renderer.js';
 import commands from './commands.js';
 
 describe('POVgoblin Commands', () => {
-  let mockManual;
-  let mockRenderer;
-  let commandSet;
+  let mockRead;
+  let mockRender;
+  let referenceCommand;
+  let renderCommand;
 
   beforeEach(() => {
-    mockManual = {
-      read: stub().resolves('Mock documentation content')
-    };
-    mockRenderer = {
-      render: stub().resolves('/path/to/rendered/scene.png')
-    };
+    mockRead = stub(Manual.prototype, 'read').resolves('Mock documentation content');
+    mockRender = stub(Renderer.prototype, 'render').resolves('/path/to/rendered/scene.png');
 
-    // Stub the Manual and Renderer constructors
-    stub(Manual.prototype, 'constructor').returns(mockManual);
-    stub(Renderer.prototype, 'constructor').returns(mockRenderer);
-
-    commandSet = commands({});
+    const commandSet = commands({});
+    referenceCommand = commandSet.find(cmd => cmd.name === 'reference');
+    renderCommand = commandSet.find(cmd => cmd.name === 'render');
   });
 
   afterEach(() => {
-    Manual.prototype.constructor.restore();
-    Renderer.prototype.constructor.restore();
+    Manual.prototype.read.restore();
+    Renderer.prototype.render.restore();
   });
 
   describe('Reference Command', () => {
-    const referenceCommand = commandSet.find(cmd => cmd.name === 'reference');
-
     it('should validate path attribute', () => {
       expect(referenceCommand.validate({ path: '/test' })).to.be.true;
       expect(referenceCommand.validate({})).to.be.false;
@@ -40,12 +33,12 @@ describe('POVgoblin Commands', () => {
     it('should fetch documentation successfully', async () => {
       const result = await referenceCommand.execute({ path: '/test' });
       
-      expect(mockManual.read.calledWith('/test')).to.be.true;
+      expect(mockRead.calledWith('/test')).to.be.true;
       expect(result).to.equal('Mock documentation content');
     });
 
     it('should handle documentation fetch errors', async () => {
-      mockManual.read.rejects(new Error('Network error'));
+      mockRead.rejects(new Error('Network error'));
 
       const result = await referenceCommand.execute({ path: '/test' });
       
@@ -55,8 +48,6 @@ describe('POVgoblin Commands', () => {
   });
 
   describe('Render Command', () => {
-    const renderCommand = commandSet.find(cmd => cmd.name === 'render');
-
     it('should validate body content', () => {
       expect(renderCommand.validate({}, 'scene content')).to.be.true;
       expect(renderCommand.validate({}, '')).to.be.false;
@@ -66,12 +57,12 @@ describe('POVgoblin Commands', () => {
     it('should render scene successfully', async () => {
       const result = await renderCommand.execute({}, 'mock scene content');
       
-      expect(mockRenderer.render.calledWith('mock scene content')).to.be.true;
+      expect(mockRender.calledWith('mock scene content')).to.be.true;
       expect(result).to.equal('/path/to/rendered/scene.png');
     });
 
     it('should handle render errors', async () => {
-      mockRenderer.render.rejects(new Error('Render process failed'));
+      mockRender.rejects(new Error('Render process failed'));
 
       const result = await renderCommand.execute({}, 'mock scene content');
       

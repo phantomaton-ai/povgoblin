@@ -1,8 +1,8 @@
 import conversations from 'phantomaton-conversations';
 import plugins from 'phantomaton-plugins';
 import execution from 'phantomaton-execution';
-import Manual from './manual.js';
-import Renderer from './renderer.js';
+
+import commands from './commands';
 
 class User {
   constructor(options) {
@@ -19,7 +19,7 @@ class User {
   }
 }
 
-const referenceCommand = {
+const referenceCommand = configuration => ({
   name: 'reference',
   description: 'Fetch POV-Ray documentation from official website',
   validate: (attributes) => attributes.path,
@@ -28,24 +28,24 @@ const referenceCommand = {
     try {
       return await manual.read(attributes.path);
     } catch (error) {
-      return `Documentation fetch failed: ${error.message}`;
+      return `Documentation fetch failed:\n\n${error.message}`;
     }
   }
-};
+});
 
-const renderCommand = {
+const renderCommand = configuration => ({
   name: 'render',
   description: 'Render a POV-Ray scene and return the path to the generated image',
   validate: (attributes, body) => !!body,
   execute: async (attributes, body) => {
-    const renderer = new Renderer();
+    const renderer = new Renderer(configuration);
     try {
       return await renderer.render(body);
     } catch (error) {
-      return `Render failed: ${error.message || error.error.message}`;
+      return `Render failed:\n\n${error.message || error.error.message}`;
     }
   }
-};
+});
 
 async function start(conversation) {
   let attempts = 0;
@@ -96,11 +96,8 @@ export default plugins.create(configuration => [
   // Register the User
   plugins.define(conversations.user).as(new User(configuration)),
   
-  // Register the reference command
-  plugins.define(execution.command).as(referenceCommand),
-  
-  // Register the render command
-  plugins.define(execution.command).as(renderCommand),
+  // Register render, reference commands
+  plugins.define(execution.command).as(commands(configuration)),
   
   // Define the start plugin
   plugins.define(plugins.start).with(
