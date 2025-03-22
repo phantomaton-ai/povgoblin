@@ -2,7 +2,7 @@ import conversations from 'phantomaton-conversations';
 import plugins from 'phantomaton-plugins';
 import execution from 'phantomaton-execution';
 
-import commands from './commands';
+import commands from './commands.js';
 
 class User {
   constructor(options) {
