@@ -1,9 +1,8 @@
 import conversations from 'phantomaton-conversations';
 import plugins from 'phantomaton-plugins';
 import execution from 'phantomaton-execution';
-import fs from 'fs';
-import { execSync } from 'child_process';
-import https from 'https';
+import Manual from './manual.js';
+import Renderer from './renderer.js';
 
 class User {
   constructor(options) {
@@ -20,63 +19,31 @@ class User {
   }
 }
 
-const renderCommand = {
-  name: 'render',
-  description: 'Render a POV-Ray scene and return any output or errors',
-  example: {
-    attributes: {},
-    body: '// POV-Ray scene file contents go here'
-  },
-  validate: (attributes) => true,
-  execute: (attributes, body) => {
+const referenceCommand = {
+  name: 'reference',
+  description: 'Fetch POV-Ray documentation from official website',
+  validate: (attributes) => attributes.path,
+  execute: async (attributes) => {
+    const manual = new Manual();
     try {
-      // Write the scene to a file
-      fs.writeFileSync('scene.pov', body);
-
-      // Attempt to render the scene
-      const renderOutput = execSync('povray scene.pov', { encoding: 'utf-8' });
-      
-      // Check if image was generated
-      if (fs.existsSync('scene.png')) {
-        return 'Render successful. Image generated as scene.png';
-      } else {
-        return 'Render completed, but no image was generated.';
-      }
+      return await manual.read(attributes.path);
     } catch (error) {
-      return `Render failed: ${error.message}`;
+      return `Documentation fetch failed: ${error.message}`;
     }
   }
 };
 
-const referenceCommand = {
-  name: 'reference',
-  description: 'Fetch POV-Ray documentation from official website',
-  example: { attributes: { path: '/' } },
-  validate: (attributes) => attributes.path,
-  execute: (attributes) => {
-    return new Promise((resolve, reject) => {
-      const options = {
-        hostname: 'www.povray.org',
-        path: `/documentation/3.7.0/${attributes.path}`,
-        method: 'GET'
-      };
-
-      const req = https.request(options, (res) => {
-        let data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          resolve(data);
-        });
-      });
-
-      req.on('error', (error) => {
-        reject(`Reference fetch failed: ${error.message}`);
-      });
-
-      req.end();
-    });
+const renderCommand = {
+  name: 'render',
+  description: 'Render a POV-Ray scene and return the path to the generated image',
+  validate: (attributes, body) => !!body,
+  execute: async (attributes, body) => {
+    const renderer = new Renderer();
+    try {
+      return await renderer.render(body);
+    } catch (error) {
+      return `Render failed: ${error.message || error.error.message}`;
+    }
   }
 };
 
@@ -107,9 +74,9 @@ async function start(conversation) {
       }
 
       // Attempt to render the scene
-      const renderResult = renderCommand.execute({}, povrayScene);
+      const renderResult = await renderCommand.execute({}, povrayScene);
       
-      if (renderResult.includes('Render successful')) {
+      if (renderResult.includes('.png')) {
         console.log('Successfully generated and rendered POV-Ray scene!');
         process.exit(0);
       } else {
@@ -129,11 +96,11 @@ export default plugins.create(configuration => [
   // Register the User
   plugins.define(conversations.user).as(new User(configuration)),
   
-  // Register the render command
-  plugins.define(execution.command).as(renderCommand),
-  
   // Register the reference command
   plugins.define(execution.command).as(referenceCommand),
+  
+  // Register the render command
+  plugins.define(execution.command).as(renderCommand),
   
   // Define the start plugin
   plugins.define(plugins.start).with(
