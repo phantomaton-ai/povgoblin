@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "phantomaton": "^0.0.9",
-    "phantomaton-anthropic": "^1.0.9"
+    "phantomaton-anthropic": "^1.0.9",
+    "phantomaton-execution": "^0.0.5"
   }
 }
