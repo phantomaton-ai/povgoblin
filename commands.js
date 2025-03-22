@@ -17,7 +17,7 @@ const commands = configuration => {
     {
       name: 'reference',
       description: 'Fetch POV-Ray documentation from official website',
-      example: { attributes: { path: '/' } },
+      example: { attributes: { path: '/' }, body: '' },
       validate: (attributes) => !!attributes.path,
       execute: async (attributes) => tryCatch(
         () => manual.read(attributes.path),
