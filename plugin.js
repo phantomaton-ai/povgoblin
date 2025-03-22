@@ -19,34 +19,6 @@ class User {
   }
 }
 
-const referenceCommand = configuration => ({
-  name: 'reference',
-  description: 'Fetch POV-Ray documentation from official website',
-  validate: (attributes) => attributes.path,
-  execute: async (attributes) => {
-    const manual = new Manual();
-    try {
-      return await manual.read(attributes.path);
-    } catch (error) {
-      return `Documentation fetch failed:\n\n${error.message}`;
-    }
-  }
-});
-
-const renderCommand = configuration => ({
-  name: 'render',
-  description: 'Render a POV-Ray scene and return the path to the generated image',
-  validate: (attributes, body) => !!body,
-  execute: async (attributes, body) => {
-    const renderer = new Renderer(configuration);
-    try {
-      return await renderer.render(body);
-    } catch (error) {
-      return `Render failed:\n\n${error.message || error.error.message}`;
-    }
-  }
-});
-
 async function start(conversation) {
   let attempts = 0;
   const maxAttempts = 5;
