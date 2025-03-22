@@ -1,7 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { execAsync } from 'child_process';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
+
+const execAsync = promisify(exec);
 
 class Renderer {
   constructor(options = {}) {
@@ -30,8 +33,11 @@ class Renderer {
 
       exec(command, (error, stdout, stderr) => {
         if (error) {
+          const messageIndex = stderr.indexOf('Parser Options');
+          const message = stderr.slice(messageIndex);
           reject({
             error,
+            message,
             stdout,
             stderr,
             sourceFile: povFile
