@@ -1,6 +1,7 @@
 import { expect, stub } from 'lovecraft';
 import fs from 'fs';
-import child_process from 'child_process';
+import path from 'path';
+import { exec } from 'child_process';
 
 import Renderer from './renderer.js';
 
@@ -9,13 +10,19 @@ describe('Renderer', () => {
   let mockFs;
 
   beforeEach(() => {
-    mockExec = stub(child_process, 'exec');
-    mockFs = stub(fs, 'existsSync').returns(true);
+    mockExec = stub(exec);
+    mockFs = {
+      existsSync: stub(fs, 'existsSync').returns(false),
+      mkdirSync: stub(fs, 'mkdirSync'),
+      writeFileSync: stub(fs, 'writeFileSync')
+    };
   });
 
   afterEach(() => {
     mockExec.restore();
-    mockFs.restore();
+    mockFs.existsSync.restore();
+    mockFs.mkdirSync.restore();
+    mockFs.writeFileSync.restore();
   });
 
   it('should generate unique filenames', async () => {
@@ -55,7 +62,7 @@ describe('Renderer', () => {
   it('should reject if no image is generated', (done) => {
     const renderer = new Renderer();
     
-    mockFs.restore();
+    mockFs.existsSync.restore();
     stub(fs, 'existsSync').returns(false);
 
     mockExec.yields(null, 'Render completed', '');
@@ -65,5 +72,13 @@ describe('Renderer', () => {
         expect(error.error.message).to.equal('Render completed but no image was generated');
         done();
       });
+  });
+
+  it('should create home directory if it does not exist', () => {
+    const mockHome = path.join(process.cwd(), 'data', 'scenes');
+    
+    const renderer = new Renderer();
+
+    expect(mockFs.mkdirSync.calledWith(mockHome, { recursive: true })).to.be.true;
   });
 });
