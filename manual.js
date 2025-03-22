@@ -1,31 +1,15 @@
 import https from 'https';
-import path from 'path';
-import fs from 'fs';
 
 class Manual {
   constructor(options = {}) {
     this.base = options.base || 'https://www.povray.org/documentation/3.7.0';
-    this.cache = options.cache || path.join(process.cwd(), 'data', 'docs-cache');
-
-    // Ensure cache directory exists
-    if (!fs.existsSync(this.cache)) {
-      fs.mkdirSync(this.cache, { recursive: true });
-    }
   }
 
   read(pagePath) {
     return new Promise((resolve, reject) => {
       // Construct full URL
       const fullUrl = `${this.base}/${pagePath}`;
-      const cacheFile = path.join(this.cache, `${pagePath.replace(/\//g, '_')}.html`);
 
-      // Check cache first
-      if (fs.existsSync(cacheFile)) {
-        const cachedContent = fs.readFileSync(cacheFile, 'utf-8');
-        return resolve(cachedContent);
-      }
-
-      // Fetch from web
       https.get(fullUrl, (response) => {
         let data = '';
 
@@ -38,8 +22,6 @@ class Manual {
         response.on('end', () => {
           // Handle different response codes
           if (response.statusCode === 200) {
-            // Cache the content
-            fs.writeFileSync(cacheFile, data);
             resolve(data);
           } else {
             reject({
