@@ -1,6 +1,6 @@
 import { expect, stub } from 'lovecraft';
 import fs from 'fs';
-import { exec } from 'child_process';
+import child_process from 'child_process';
 
 import Renderer from './renderer.js';
 
@@ -9,7 +9,7 @@ describe('Renderer', () => {
   let mockFs;
 
   beforeEach(() => {
-    mockExec = stub(exec);
+    mockExec = stub(child_process, 'exec');
     mockFs = stub(fs, 'existsSync').returns(true);
   });
 
