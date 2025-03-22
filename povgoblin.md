@@ -64,4 +64,3 @@ A computational ritual space where geometric primitives perform mathematical tra
 /install(module:phantomaton-conversations)
 /install(module:phantomaton-execution)
 /install(module:phantomaton-system)
-/install(module:./plugin.js)

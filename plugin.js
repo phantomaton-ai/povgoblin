@@ -23,6 +23,10 @@ class User {
 const renderCommand = {
   name: 'render',
   description: 'Render a POV-Ray scene and return any output or errors',
+  example: {
+    attributes: {},
+    body: '// POV-Ray scene file contents go here'
+  },
   validate: (attributes) => true,
   execute: (attributes, body) => {
     try {
@@ -47,6 +51,7 @@ const renderCommand = {
 const referenceCommand = {
   name: 'reference',
   description: 'Fetch POV-Ray documentation from official website',
+  example: { attributes: { path: '/' } },
   validate: (attributes) => attributes.path,
   execute: (attributes) => {
     return new Promise((resolve, reject) => {
