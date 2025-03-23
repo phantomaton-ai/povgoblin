@@ -24,7 +24,7 @@ export default class User {
     const renderAttempted = this.preamble.includes(RENDER_ATTEMPT);
     const referenceFailed = referenceAttempted && this.preamble.includes(REFERENCE_FAILURE);
     const renderFailed = renderAttempted && this.preamble.includes(RENDER_FAILURE);
-    
+
     if (renderFailed) {
       return RENDER_FAILURE_GUIDANCE;
     }

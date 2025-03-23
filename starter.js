@@ -8,7 +8,7 @@ export default class Starter {
   async start(conversation, options) {
     while (true) {
       if (this.rounds >= this.maximum) {
-        return Promise.reject(`Exceeded maximum tries of ${this.maximum}`);
+        throw new Error(`Exceeded maximum tries of ${this.maximum}`);
       }
       const { message, reply } = await conversation.advance();
       conversation.user.preamble = conversation.assistant.preamble;
