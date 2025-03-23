@@ -29,7 +29,7 @@ describe('Starter', () => {
     mockConversation.assistant.preamble = 'test preamble';
     mockFinisher.finished.returns('foo.png');
 
-    const starter = new Starter({ maximum: 2 });
+    const starter = new Starter();
     
     await starter.start(mockConversation);
     
@@ -43,7 +43,7 @@ describe('Starter', () => {
     });
     mockFinisher.finished.returns('scene-123.png');
 
-    const starter = new Starter({ maximum: 2 });
+    const starter = new Starter({});
     
     const result = await starter.start(mockConversation);
     
@@ -57,13 +57,13 @@ describe('Starter', () => {
     });
     mockFinisher.finished.returns(undefined);
 
-    const starter = new Starter({ maximum: 1 });
+    const starter = new Starter({ maximum: 1, delay: 0.001 });
     
     try {
       await starter.start(mockConversation);
       expect.fail('Should have thrown an error');
     } catch (error) {
-      expect(error).to.include('Exceeded maximum tries');
+      expect(error.message).to.include('Exceeded maximum tries');
     }
   });
 });
