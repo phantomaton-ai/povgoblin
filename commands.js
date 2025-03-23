@@ -5,7 +5,7 @@ async function tryCatch(call, prefix) {
   try {
     return await call();
   } catch (e) {
-    return [prefix, e.message || e.error.message].join('\n\n');
+    return [prefix, e.message].join('\n\n');
   }
 }
 
