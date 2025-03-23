@@ -18,12 +18,10 @@ POVgoblin generates and renders 3D scenes using POV-Ray, combining AI-driven cre
 ### Command-line Usage
 
 ```bash
-# Generate a scene with a textual prompt
 $ povgoblin "A cyberpunk cityscape at night"
-# Output: data/scenes/scene_2023-12-15_123456.png
 ```
 
-The CLI returns the absolute path to the generated scene image, making it easy to:
+The CLI returns the relative path to the generated scene image, making it easy to:
 - Open the image
 - Use in other workflows
 - Track and manage generated scenes
@@ -33,9 +31,9 @@ The CLI returns the absolute path to the generated scene image, making it easy t
 ```javascript
 import povgoblin from 'povgoblin';
 
-async function generateScene() {
+async function generate() {
   try {
-    const result = await povgoblin({
+    const result = await povgoblin(prompt, {
       home: 'data/scenes', // Directory for generated scenes
       maximum: 30,         // Maximum generation attempts
       delay: 0.5           // Delay (in seconds) between attempts
@@ -51,20 +49,16 @@ async function generateScene() {
 
 POVgoblin relies upon [Phantomaton configuration](https://github.com/phantomaton-ai/phantomaton?tab=readme-ov-file#configuration-).
 
+An Anthropic API key is required for AI-powered scene generation.
+
 Example configuration:
 ```json
 {
-  "povgoblin": {
-    "home": "~/scenes",
-    "maximum": 30
-  },
   "phantomaton-anthropic": {
     "apiKey": "your-anthropic-api-key"
   }
 }
 ```
-
-Note: An Anthropic API key is required for AI-powered scene generation.
 
 ## Features 💫
 
