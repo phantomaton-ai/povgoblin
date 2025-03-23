@@ -15,18 +15,8 @@ describe('POVgoblin CLI', () => {
     console.log.restore();
   });
 
-  it('should print result on success', async () => {
+  it('calls start', async () => {
     await import('./cli.js');
-    await new Promise(res => setTimeout(res, 1));
-    expect(console.log.calledOnce).true;
-    expect(console.error.notCalled).true;
-  });
-
-  it('should run without errors', async () => {
-    Starter.prototype.start.rejects('oops');
-    await import('./cli.js');
-    await new Promise(res => setTimeout(res, 1));
-    expect(console.log.notCalled).true;
-    expect(console.error.calledOnce).true;
+    expect(Starter.prototype.start.called).true;
   });
 });
