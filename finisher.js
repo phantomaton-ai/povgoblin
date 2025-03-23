@@ -4,9 +4,20 @@ export default class Finisher {
   }
 
   finished(conversation) {
-    const preamble = conversation.assistant.preamble || '';
-    const renderSuccessMatch = preamble.match(/Render successful\. Image generated as (.+\.png)/);
+    const preamble = conversation.assistant?.preamble || '';
     
-    return renderSuccessMatch ? renderSuccessMatch[1] : undefined;
+    // Regex to match successful render directive
+    const successMatch = preamble.match(/🪄✨ render\(\) {([^}]+)\.png}/);
+    
+    // Regex to match render failure directive
+    const failureMatch = preamble.includes('Render failed');
+
+    if (successMatch) {
+      // Extract and trim the filename
+      const filename = successMatch[1].trim().split('/').pop() + '.png';
+      return filename;
+    }
+
+    return undefined;
   }
 }
