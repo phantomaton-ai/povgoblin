@@ -1,21 +1,32 @@
-import { expect } from 'lovecraft';
-import { execSync } from 'child_process';
-import path from 'path';
+import { expect, stub } from 'lovecraft';
+
+import Starter from './starter.js';
 
 describe('POVgoblin CLI', () => {
-  it('should run without errors', () => {
-    const cliPath = path.join(__dirname, 'cli.js');
-    
-    try {
-      const result = execSync(`node ${cliPath}`, { 
-        encoding: 'utf-8',
-        timeout: 5000 
-      });
-      
-      // Since we can't predict exact output, just ensure something is logged
-      expect(result.trim()).to.not.be.empty;
-    } catch (error) {
-      expect.fail(`CLI failed to run: ${error.message}`);
-    }
+  beforeEach(() => {
+    stub(Starter.prototype, 'start').resolves('test.png');
+    stub(console, 'error');
+    stub(console, 'log');
+  });
+
+  afterEach(() => {
+    Starter.prototype.start.restore();
+    console.error.restore();
+    console.log.restore();
+  });
+
+  it('should print result on success', async () => {
+    await import('./cli.js');
+    await new Promise(res => setTimeout(res, 1));
+    expect(console.log.calledOnce).true;
+    expect(console.error.notCalled).true;
+  });
+
+  it('should run without errors', async () => {
+    Starter.prototype.start.rejects('oops');
+    await import('./cli.js');
+    await new Promise(res => setTimeout(res, 1));
+    expect(console.log.notCalled).true;
+    expect(console.error.calledOnce).true;
   });
 });
