@@ -37,11 +37,7 @@ POVgoblin generates and renders 3D scenes using POV-Ray, combining AI-driven cre
 ### Command-line Usage
 
 ```bash
-# Generate a scene with default configuration
 povgoblin
-
-# Optionally specify custom configuration
-povgoblin path/to/custom/configuration.json
 ```
 
 ### Programmatic Usage
@@ -52,7 +48,9 @@ import povgoblin from 'povgoblin';
 async function generateScene() {
   try {
     const result = await povgoblin({
-      // Optional configuration
+      home: 'data/scenes', // Directory for generated scenes
+      maximum: 30,         // Maximum generation attempts
+      delay: 0.5           // Delay (in seconds) between attempts
     });
     console.log(`Scene rendered: ${result}`);
   } catch (error) {
@@ -63,12 +61,7 @@ async function generateScene() {
 
 ## Configuration 🔧
 
-POVgoblin uses [Phantomaton configuration](https://github.com/phantomaton-ai/phantomaton?tab=readme-ov-file#configuration-), with the following key options:
-
-- `povgoblin.home`: Directory for generated scenes
-- `povgoblin.maximum`: Maximum generation attempts
-- `povgoblin.delay`: Delay between generation attempts
-- `phantomaton-anthropic.apiKey`: Required AI provider configuration
+POVgoblin relies upon [Phantomaton configuration](https://github.com/phantomaton-ai/phantomaton?tab=readme-ov-file#configuration-); in particular, you will need an Anthropic API key defined to use `povgoblin`.
 
 ## Commands 📦
 
