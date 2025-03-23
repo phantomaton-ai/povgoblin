@@ -5,9 +5,10 @@ An AI-powered POV-Ray scene generation assistant that leverages computational cr
 ## Installation 🚀
 
 ```bash
-# Requires POV-Ray (https://www.povray.org/download/)
 npm install -g povgoblin
 ```
+
+Requires POV-Ray (https://www.povray.org/download/)
 
 ## Overview 🌟
 
