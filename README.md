@@ -19,8 +19,10 @@ POVgoblin generates and renders 3D scenes using POV-Ray, combining AI-driven cre
 ### Command-line Usage
 
 ```bash
-$ povgoblin "A cyberpunk cityscape at night"
+$ povgoblin "A depiction of the solar system"
 ```
+
+![A 3D rendering of the solar system.](example.png)
 
 The CLI returns the relative path to the generated scene image, making it easy to:
 - Open the image
