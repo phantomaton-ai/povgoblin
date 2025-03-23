@@ -7,7 +7,7 @@ export default class Finisher {
     const preamble = conversation.assistant?.preamble || '';
     
     // Regex to match successful render directive
-    const successMatch = preamble.match(/🪄✨ render\(\) {([^}]+)\.png}/);
+    const successMatch = preamble.match(/🪄✨ render\(\) {\n([^}]+)\.png\n}/);
     
     // Regex to match render failure directive
     const failureMatch = preamble.includes('Render failed');

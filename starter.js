@@ -8,10 +8,10 @@ export default class Starter {
     this.finisher = new Finisher(options);
   }
 
-  async start(conversation, options) {
+  async start(conversation) {
     while (true) {
       if (this.rounds >= this.maximum) {
-        return Promise.reject(`Exceeded maximum tries of ${this.maximum}`);
+        throw new Error(`Exceeded maximum tries of ${this.maximum}`);
       }
       const { message, reply } = await conversation.advance();
       conversation.user.preamble = conversation.assistant.preamble;

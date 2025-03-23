@@ -8,10 +8,8 @@ describe('Starter', () => {
 
   beforeEach(() => {
     mockFinisher = {
-      finished: stub()
+      finished: stub(Finisher.prototype, 'finished')
     };
-    stub(Finisher.prototype, 'constructor').returns(mockFinisher);
-
     mockConversation = {
       advance: stub(),
       user: {},
@@ -20,7 +18,7 @@ describe('Starter', () => {
   });
 
   afterEach(() => {
-    Finisher.prototype.constructor.restore();
+    Finisher.prototype.finished.restore();
   });
 
   it('should propagate preamble to user', async () => {
@@ -29,7 +27,7 @@ describe('Starter', () => {
       reply: 'test reply' 
     });
     mockConversation.assistant.preamble = 'test preamble';
-    mockFinisher.finished.returns(undefined);
+    mockFinisher.finished.returns('foo.png');
 
     const starter = new Starter({ maximum: 2 });
     
