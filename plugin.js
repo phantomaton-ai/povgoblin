@@ -6,7 +6,7 @@ import commands from './commands.js';
 import Starter from './starter.js';
 import User from './user.js';
 
-export default plugins.create(configuration => [
+export default plugins.create(({ configuration }) => [
   // Register the User
   plugins.define(conversations.user).as(new User(configuration)),
 

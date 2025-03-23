@@ -21,7 +21,7 @@ export default class User {
     }
 
     const referenceAttempted = this.preamble.includes(REFERENCE_ATTEMPT);
-    const renderAttempted = this.preamble.includes(REFERENCE_ATTEMPT);
+    const renderAttempted = this.preamble.includes(RENDER_ATTEMPT);
     const referenceFailed = referenceAttempted && this.preamble.includes(REFERENCE_FAILURE);
     const renderFailed = renderAttempted && this.preamble.includes(RENDER_FAILURE);
     
