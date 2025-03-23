@@ -1,3 +1,3 @@
 import povgoblin from './povgoblin.js';
 
-povgoblin().catch(console.error);
+povgoblin().then(console.log).catch(console.error);
