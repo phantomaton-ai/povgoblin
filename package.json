@@ -22,6 +22,7 @@
     "lovecraft": "^1.0.3"
   },
   "dependencies": {
+    "chalk": "^5.4.1",
     "phantomaton": "^0.0.11",
     "phantomaton-anthropic": "^1.0.9",
     "phantomaton-execution": "^0.0.7",

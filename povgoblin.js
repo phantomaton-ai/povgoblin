@@ -3,7 +3,8 @@ import phantomaton from 'phantomaton';
 
 import plugin from './plugin.js';
 
-export default function povgoblin(request, configuration = {}) {
+export default function povgoblin(request, options = {}) {
   const sysprompt = fs.readFileSync('povgoblin.md', 'utf-8');
-  return phantomaton(sysprompt, { install: [plugin({ request })] });
+  const install = [plugin({ ...options, request })];
+  return phantomaton(sysprompt, { install });
 }
