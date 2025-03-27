@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import povgoblin from './povgoblin.js';
 
 const args = process.argv.slice(2);
