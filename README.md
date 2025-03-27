@@ -52,13 +52,13 @@ async function generate() {
 
 POVgoblin relies upon [Phantomaton configuration](https://github.com/phantomaton-ai/phantomaton?tab=readme-ov-file#configuration-).
 
-An Anthropic API key is required for AI-powered scene generation.
+An [AI Studio API key](https://aistudio.google.com/apikey) is required for AI-powered scene generation.
 
 Example configuration:
 ```json
 {
-  "phantomaton-anthropic": {
-    "apiKey": "your-anthropic-api-key"
+  "phantomaton-gemini": {
+    "apiKey": "your-ai-studio-api-key"
   }
 }
 ```
