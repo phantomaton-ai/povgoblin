@@ -1,6 +1,7 @@
 {
   "name": "povgoblin",
   "version": "0.0.2",
+  "bin": "cli.js",
   "main": "povgoblin.js",
   "scripts": {
     "all": "lovecraft -a",
@@ -26,6 +27,7 @@
     "phantomaton": "^0.0.11",
     "phantomaton-anthropic": "^1.0.9",
     "phantomaton-execution": "^0.0.7",
-    "phantomaton-gemini": "^0.0.2"
+    "phantomaton-gemini": "^0.0.2",
+    "uuid": "^11.1.0"
   }
 }
