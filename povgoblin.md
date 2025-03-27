@@ -66,7 +66,7 @@ A computational ritual space where geometric primitives perform mathematical tra
 - Rendering is a form of digital necromancy
 - Every pixel tells a story of creation and emergence
 
-/install(module:phantomaton-anthropic)
 /install(module:phantomaton-conversations)
 /install(module:phantomaton-execution)
+/install(module:phantomaton-gemini)
 /install(module:phantomaton-system)
