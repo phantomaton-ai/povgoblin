@@ -15,17 +15,19 @@ describe('Starter', () => {
       user: {},
       assistant: {}
     };
-  });
-
-  afterEach(() => {
-    Finisher.prototype.finished.restore();
-  });
-
-  it('should propagate preamble to user', async () => {
     mockConversation.advance.resolves({ 
       message: 'test', 
       reply: 'test reply' 
     });
+    stub(console, 'log');
+  });
+
+  afterEach(() => {
+    Finisher.prototype.finished.restore();
+    console.log.restore();
+  });
+
+  it('should propagate preamble to user', async () => {
     mockConversation.assistant.preamble = 'test preamble';
     mockFinisher.finished.returns('foo.png');
 
@@ -37,10 +39,6 @@ describe('Starter', () => {
   });
 
   it('should return result when finisher detects success', async () => {
-    mockConversation.advance.resolves({ 
-      message: 'test', 
-      reply: 'test reply' 
-    });
     mockFinisher.finished.returns('scene-123.png');
 
     const starter = new Starter({});
@@ -51,12 +49,6 @@ describe('Starter', () => {
   });
 
   it('should reject when maximum rounds are exceeded', async () => {
-    mockConversation.advance.resolves({ 
-      message: 'test', 
-      reply: 'test reply' 
-    });
-    mockFinisher.finished.returns(undefined);
-
     const starter = new Starter({ maximum: 1, delay: 0.001 });
     
     try {
@@ -65,5 +57,25 @@ describe('Starter', () => {
     } catch (error) {
       expect(error.message).to.include('Exceeded maximum tries');
     }
+  });
+
+  it('outputs turn content when debug mode is enabled', async () => {
+    mockFinisher.finished.returns('scene-123.png');
+
+    const starter = new Starter({ debug: true });
+    
+    const result = await starter.start(mockConversation);
+    
+    expect(console.log.callCount).to.eq(3);
+  });
+
+  it('outputs nothing when debug mode is disabled', async () => {
+    mockFinisher.finished.returns('scene-123.png');
+
+    const starter = new Starter({ debug: false });
+    
+    const result = await starter.start(mockConversation);
+    
+    expect(console.log.notCalled).true;
   });
 });
